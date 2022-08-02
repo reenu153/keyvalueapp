@@ -5,7 +5,8 @@ import APP_CONSTANTS from "../constants";
 import { EmployeeService } from "../service/EmployeeService";
 import { CreateEmployeeDto } from "../dto/CreateEmployee";
 import validationMiddleware from "../middleware/validationMiddleware";
-
+import { UpdateEmployeeDto } from "../dto/UpdateEmployee";
+import { UUIDDto } from "../dto/UUID";
 
 class EmployeeController extends AbstractController {
   constructor(private employeeService: EmployeeService ) {
@@ -14,16 +15,16 @@ class EmployeeController extends AbstractController {
   }
   
   protected initializeRoutes() {
-    this.router.get(`${this.path}`, this.employeeResponse);
-    this.router.get(`${this.path}/:id`, this.employeeResponsebyId);
+    this.router.get(`${this.path}`, this.getAllEmployees);
+    this.router.get(`${this.path}/:id`, this.getEmployeebyId);
     this.router.post(
       `${this.path}`,
         validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body),
       // this.asyncRouteHandler(this.createEmployee)
       this.createEmployee
     );
-    this.router.delete(`${this.path}/:id`, this.employeesoftDelete);
-    this.router.put(`${this.path}/:id`, this.employeeUpdate);
+    this.router.delete(`${this.path}/:id`,validationMiddleware(UUIDDto, APP_CONSTANTS.params), this.deleteEmployeeByID);
+    this.router.put(`${this.path}/:id`, validationMiddleware(UpdateEmployeeDto, APP_CONSTANTS.body), this.updateEmployeeByID);
 
   }
   private createEmployee = async (
@@ -40,7 +41,7 @@ class EmployeeController extends AbstractController {
       next(err);
     }
   }
-  private employeeResponse = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  private getAllEmployees = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.employeeService.getAllEmployees();
       response.status(200);
@@ -49,7 +50,7 @@ class EmployeeController extends AbstractController {
       return next(error);
     }
   }
-  private employeeResponsebyId = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  private getEmployeebyId = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.employeeService.getEmployeebyID(request.params.id);
       response.status(200);
@@ -58,7 +59,7 @@ class EmployeeController extends AbstractController {
       return next(error);
     }
   }
-  private employeesoftDelete = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  private deleteEmployeeByID = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.employeeService.softDeleteEmployeeById(request.params.id);
       response.status(200);
@@ -67,7 +68,7 @@ class EmployeeController extends AbstractController {
       return next(error);
     }
   }
-  private employeeUpdate = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  private updateEmployeeByID = async (request: RequestWithUser, response: Response, next: NextFunction) => {
   try {
     const data: any = await this.employeeService.updateEmployeeDetails(request.params.id,request.body);
     response.status(200);

@@ -8,6 +8,7 @@ import { DepartmentService } from "../service/DepartmentService";
 import { EmployeeService } from "../service/EmployeeService";
 import { DepartmentRespository } from "../repository/departmentRepository";
 import { EmployeeRespository } from "../repository/employeeRepository";
+
 export default [
   new HealthController(),
   new EmployeeController(new EmployeeService(new EmployeeRespository())),

@@ -13,16 +13,16 @@ class DepartmentController extends AbstractController {
   }
   
   protected initializeRoutes() {
-    this.router.get(`${this.path}`, this.departmentResponse);
+    this.router.get(`${this.path}`, this.getAllDepartments);
     this.router.post(
       `${this.path}`,
        validationMiddleware(CreateDepartmentDto, APP_CONSTANTS.body),
-      // this.asyncRouteHandler(this.createEmployee)
       this.createDepartment
     );
-    this.router.delete(`${this.path}/:id`, this.departmentsoftDelete);
-    this.router.put(`${this.path}/:id`, this.departmentUpdate);
+    this.router.delete(`${this.path}/:id`, this.deleteDepartmentByID);
+    this.router.put(`${this.path}/:id`, this.updateDepartmentByID);
   }
+
   private createDepartment = async (
     request: RequestWithUser,
     response: Response,
@@ -37,7 +37,8 @@ class DepartmentController extends AbstractController {
       next(err);
     }
   }
-  private departmentResponse = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+
+  private getAllDepartments = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.departmentService.getAllDepartments();
       response.status(200);
@@ -46,7 +47,8 @@ class DepartmentController extends AbstractController {
       return next(error);
     }
   }
-  private departmentResponsebyId = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+
+  private getDepartmentbyId = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.departmentService.getDepartmentbyID(request.params.id);
       response.status(200);
@@ -55,7 +57,7 @@ class DepartmentController extends AbstractController {
       return next(error);
     }
   }
-  private departmentsoftDelete = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  private deleteDepartmentByID = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.departmentService.softDeleteDepartmentById(request.params.id);
       response.status(200);
@@ -64,7 +66,7 @@ class DepartmentController extends AbstractController {
       return next(error);
     }
   }
-  private departmentUpdate = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  private updateDepartmentByID = async (request: RequestWithUser, response: Response, next: NextFunction) => {
   try {
     const data: any = await this.departmentService.updateDepartmentDetails(request.params.id,request.body);
     response.status(200);
