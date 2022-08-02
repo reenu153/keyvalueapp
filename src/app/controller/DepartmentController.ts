@@ -14,6 +14,7 @@ class DepartmentController extends AbstractController {
   
   protected initializeRoutes() {
     this.router.get(`${this.path}`, this.getAllDepartments);
+    this.router.get(`${this.path}/:id`, this.getDepartmentbyId);
     this.router.post(
       `${this.path}`,
        validationMiddleware(CreateDepartmentDto, APP_CONSTANTS.body),

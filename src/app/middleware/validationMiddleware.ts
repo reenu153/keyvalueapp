@@ -33,7 +33,7 @@ function validationMiddleware<T>(type: any, parameter: string, skipMissingProper
         } else {
             if(parameter==='body')
             req.body = requestBody;
-          next();
+          next(errors);
         }
       });
   };
