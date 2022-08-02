@@ -31,5 +31,11 @@ export class EmployeeRespository{
         });
         return updateEmployeeDetails;
     }
-    
+    public async getEmployeeByName(name: string) {
+        const employeeRepo = getConnection().getRepository(Employee);
+        const employeeDetail = await employeeRepo.findOne({
+            where: { name },
+        });
+        return employeeDetail;
+    }
     }

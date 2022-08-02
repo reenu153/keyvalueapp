@@ -15,6 +15,8 @@ export class Employee extends AbstractEntity {
     public role: string;
     @Column({ nullable: false })
     public experience: number;
+    @Column({nullable:true})
+    public password :string
 
     // @Column({ nullable: false })
     // public address_id:string;

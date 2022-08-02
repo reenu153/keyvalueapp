@@ -17,11 +17,17 @@ class EmployeeController extends AbstractController {
   protected initializeRoutes() {
     this.router.get(`${this.path}`, this.getAllEmployees);
     this.router.get(`${this.path}/:id`, this.getEmployeebyId);
+    this.router.get(`${this.path}/:name`, this.getEmployeebyName);
     this.router.post(
       `${this.path}`,
         validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body),
       // this.asyncRouteHandler(this.createEmployee)
       this.createEmployee
+    );
+        
+    this.router.post(
+      `${this.path}/login`,
+      this.login
     );
     this.router.delete(`${this.path}/:id`,validationMiddleware(UUIDDto, APP_CONSTANTS.params), this.deleteEmployeeByID);
     this.router.put(`${this.path}/:id`, validationMiddleware(UpdateEmployeeDto, APP_CONSTANTS.body), this.updateEmployeeByID);
@@ -59,6 +65,16 @@ class EmployeeController extends AbstractController {
       return next(error);
     }
   }
+ 
+  private getEmployeebyName = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+    try {
+      const data: any = await this.employeeService.getEmployeeByName(request.params.id);
+      response.status(200);
+      response.send(this.fmt.formatResponse(data, Date.now() - request.startTime, "OK", 1));
+    } catch (error) {
+      return next(error);
+    }
+  }
   private deleteEmployeeByID = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.employeeService.softDeleteEmployeeById(request.params.id);
@@ -77,5 +93,19 @@ class EmployeeController extends AbstractController {
     return next(error);
   }
 }
+  private login = async (
+    request: RequestWithUser,
+    response: Response,
+    next: NextFunction
+  ) => {
+    const loginData = request.body;
+    const loginDetail = await this.employeeService.employeeLogin(
+      loginData.name.toLowerCase(),
+      loginData.password
+    );
+    response.send(
+      this.fmt.formatResponse(loginDetail, Date.now() - request.startTime, "OK")
+    );
+};
 }
 export default EmployeeController;

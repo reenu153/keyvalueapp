@@ -17,4 +17,7 @@ export class CreateEmployeeDto {
 
     @IsUUID()
     public departmentId: string;
+
+    @IsString()
+    public password: string;
 }
