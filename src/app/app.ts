@@ -52,6 +52,7 @@ class App extends EventEmitter {
     // use for computing processing time on response
     this.app.use((request: RequestWithUser, response: express.Response, next: express.NextFunction) => {
       request.startTime = Date.now();
+      console.log(request.startTime);
       next();
     });
   } 

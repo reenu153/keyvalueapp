@@ -20,12 +20,11 @@ export class EmployeeService{
     public async updateEmployeeDetails(employeeId: string, employeeDetails: any){
         const newEmployee = plainToClass(Employee, {
             name: employeeDetails.name,
-            // username: employeeDetails.username,
-            // age: employeeDetails.age,
+            role: employeeDetails.role,
+            experience: employeeDetails.experience,
+            joining_date: employeeDetails.joining_date,
             departmentId: employeeDetails.departmentId,
-            // isActive: true,
         });
-
         return this.employeeRepo.updateEmployeeDetails(employeeId,newEmployee);
     }
     
@@ -33,8 +32,9 @@ export class EmployeeService{
         try {
             const newEmployee = plainToClass(Employee, {
                 name: employeeDetails.name,
-                // username: employeeDetails.username,
-                // age: employeeDetails.age,
+                role: employeeDetails.role,
+                experience: employeeDetails.experience,
+                joining_date: employeeDetails.joining_date,
                 departmentId: employeeDetails.departmentId,
                 // isActive: true,
             });
