@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import UserNotAuthorizedException from "../exception/UserNotAuthorizedException";
 import IncorrectUsernameOrPasswordException from "../exception/IncorrectUsernameOrPasswordException";
+import { Address } from "../entities/Address";
 
 export class EmployeeService{
     constructor(private employeeRepo: EmployeeRespository) {
@@ -55,14 +56,22 @@ export class EmployeeService{
     
     public async createEmployee(employeeDetails: any) {
         try {
+            const newAddress=plainToClass(Address,{
+                address_line1:employeeDetails.address_line1,
+                address_line2:employeeDetails.address_line2,
+                city:employeeDetails.city,
+                pincode:employeeDetails.pincode
+            });
+
             const newEmployee = plainToClass(Employee, {
                 name: employeeDetails.name,
+                username:employeeDetails.username,
                 role: employeeDetails.role,
                 experience: employeeDetails.experience,
                 joining_date: employeeDetails.joining_date,
                 departmentId: employeeDetails.departmentId,
                 password: employeeDetails.password ? await bcrypt.hash(employeeDetails.password,10):'',
-                // isActive: true,
+                address: newAddress
             });
             const save = await this.employeeRepo.saveEmployeeDetails(newEmployee);
             return save;
@@ -71,16 +80,16 @@ export class EmployeeService{
         }
     }
 
-    public async getEmployeeByName(name: string) {
-        return this.employeeRepo.getEmployeebyId(name);
+    public async getEmployeeByUsername(username: string) {
+        return this.employeeRepo.getEmployeebyId(username);
     }
 
      public employeeLogin = async (
-        name: string,
+        username: string,
         password: string
       ) => {
-        const employeeDetails = await this.employeeRepo.getEmployeeByName(
-          name
+        const employeeDetails = await this.employeeRepo.getEmployeeByUsername(
+          username
         );
         if (!employeeDetails) {
            throw new UserNotAuthorizedException(ErrorCodes.UNAUTHORIZED);
@@ -89,7 +98,7 @@ export class EmployeeService{
         if (validPassword) {
           let payload = {
             "id": employeeDetails.id,
-            "name": employeeDetails.name,
+            "username": employeeDetails.username,
             "role":employeeDetails.role
           };
           const token = this.generateAuthTokens(payload);

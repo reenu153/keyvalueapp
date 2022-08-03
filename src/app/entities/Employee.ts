@@ -12,6 +12,9 @@ export class Employee extends AbstractEntity {
 
     @Column({ nullable: false })
     public name: string;
+
+    @Column({ nullable: false })
+    public username: string;
     
     @Column({ nullable: false })
     public joining_date: string;
@@ -24,9 +27,6 @@ export class Employee extends AbstractEntity {
     
     @Column({nullable:true})
     public password :string
-
-    @Column({ nullable: true })
-    public address_id:string;
 
     @OneToOne(()=> Address,{ cascade: true })
     @JoinColumn()

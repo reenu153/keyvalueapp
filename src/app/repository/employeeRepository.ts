@@ -31,10 +31,10 @@ export class EmployeeRespository{
         });
         return updateEmployeeDetails;
     }
-    public async getEmployeeByName(name: string) {
+    public async getEmployeeByUsername(username: string) {
         const employeeRepo = getConnection().getRepository(Employee);
         const employeeDetail = await employeeRepo.findOne({
-            where: { name },
+            where: { username },
         });
         return employeeDetail;
     }

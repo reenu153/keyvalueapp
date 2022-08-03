@@ -20,7 +20,7 @@ class EmployeeController extends AbstractController {
   protected initializeRoutes() {
     this.router.get(`${this.path}`,authorize(['admin','developer','QA','HR']),this.getAllEmployees);
     this.router.get(`${this.path}/:id`,authorize(['admin','developer','QA','HR']), this.getEmployeebyId);
-    this.router.get(`${this.path}/:name`, this.getEmployeebyName);
+    this.router.get(`${this.path}/:username`, this.getEmployeebyUsername);
 
     this.router.post(
       `${this.path}`,
@@ -67,9 +67,9 @@ class EmployeeController extends AbstractController {
     }
   }
  
-  private getEmployeebyName = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  private getEmployeebyUsername = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
-      const data: any = await this.employeeService.getEmployeeByName(request.params.id);
+      const data: any = await this.employeeService.getEmployeeByUsername(request.params.id);
       response.status(200);
       response.send(this.fmt.formatResponse(data, Date.now() - request.startTime, "OK", 1));
     } catch (error) {

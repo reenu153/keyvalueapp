@@ -1,10 +1,15 @@
 
-import { IsNumber, IsString, IsUUID } from "class-validator";
+import { IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
+import { Address } from "../entities/Address";
+import { CreateAddressDto } from "./CreateAddress";
 
 export class CreateEmployeeDto {
 
     @IsString()
     public name: string;
+
+    @IsString()
+    public username: string;
 
     @IsNumber()
     public experience: number;
@@ -21,6 +26,6 @@ export class CreateEmployeeDto {
     @IsString()
     public password: string;
 
-    @IsString()
-    public address_id: string;
+    @ValidateNested()
+    public address: CreateAddressDto;
 }
