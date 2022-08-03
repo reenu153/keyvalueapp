@@ -11,13 +11,15 @@ import IncorrectUsernameOrPasswordException from "../exception/IncorrectUsername
 
 export class EmployeeService{
     constructor(private employeeRepo: EmployeeRespository) {
-   
-    
+
     }
+
     public async getAllEmployees(){
         return this.employeeRepo.getAllEmployees();
     }
+
     public async getEmployeebyID(id:string){
+
         const employee= await this.employeeRepo.getEmployeebyId(id);
         if(!employee)
         {
@@ -25,9 +27,16 @@ export class EmployeeService{
         }
         return employee;
     }
+
     public async softDeleteEmployeeById(id: string){
-        return this.employeeRepo.softDeleteEmployeeById(id);
+
+        const response=await this.employeeRepo.softDeleteEmployeeById(id);
+        if(response.affected==0)
+            {
+                throw new EntityNotFoundException(ErrorCodes.EMPLOYEE_WITH_ID_NOT_FOUND);
+            }
     }
+
     public async updateEmployeeDetails(employeeId: string, employeeDetails: any){
         const newEmployee = plainToClass(Employee, {
             name: employeeDetails.name,
@@ -36,7 +45,12 @@ export class EmployeeService{
             joining_date: employeeDetails.joining_date,
             departmentId: employeeDetails.departmentId,
         });
-        return this.employeeRepo.updateEmployeeDetails(employeeId,newEmployee);
+        const data = await this.employeeRepo.updateEmployeeDetails(employeeId,newEmployee);
+        if(data==null)
+        {
+            throw new EntityNotFoundException(ErrorCodes.EMPLOYEE_WITH_ID_NOT_FOUND);
+        }
+        return data;
     }
     
     public async createEmployee(employeeDetails: any) {
@@ -56,6 +70,7 @@ export class EmployeeService{
             throw new HttpException(400, "Failed to create employee", "CREATE_FAIL_CODE");
         }
     }
+
     public async getEmployeeByName(name: string) {
         return this.employeeRepo.getEmployeebyId(name);
     }
@@ -73,8 +88,9 @@ export class EmployeeService{
         const validPassword = await bcrypt.compare(password, employeeDetails.password);
         if (validPassword) {
           let payload = {
-            "custom:id": employeeDetails.id,
-            "custom:name": employeeDetails.name,
+            "id": employeeDetails.id,
+            "name": employeeDetails.name,
+            "role":employeeDetails.role
           };
           const token = this.generateAuthTokens(payload);
 

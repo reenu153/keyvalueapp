@@ -22,6 +22,10 @@ export const ErrorCodes: { [key: string]: CustomError } = {
         CODE: "EMPLOYEE_WITH_ID_NOT_FOUND",
         MESSAGE: "EMployee with given id not found",
     },
+    DEPARTMENT_WITH_ID_NOT_FOUND: {
+        CODE: "DEPARTMENT_WITH_ID_NOT_FOUND",
+        MESSAGE: "Department with given id not found",
+    },
     VALIDATION_ERROR: {
         CODE: "VALIDATION_ERROR",
         MESSAGE: "Validation failed error",

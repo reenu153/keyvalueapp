@@ -20,4 +20,7 @@ export class CreateEmployeeDto {
 
     @IsString()
     public password: string;
+
+    @IsString()
+    public address_id: string;
 }
