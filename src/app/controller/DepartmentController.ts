@@ -15,16 +15,35 @@ class DepartmentController extends AbstractController {
   }
   
   protected initializeRoutes() {
-    this.router.get(`${this.path}`,authorize(['admin','HR','QA','Developer']) ,this.getAllDepartments);
-    this.router.get(`${this.path}/:id`, this.getDepartmentbyId);
+
+    this.router.get(
+      `${this.path}`,
+      authorize(['admin','HR','QA','Developer']) ,
+      this.getAllDepartments
+      );
+
+    this.router.get(`${this.path}/:id`, this.getDepartmentById);
+
     this.router.post(
       `${this.path}`,
       authorize(['admin','HR']),
        validationMiddleware(CreateDepartmentDto, APP_CONSTANTS.body),
       this.createDepartment
     );
-    this.router.delete(`${this.path}/:id`, authorize(['admin','HR']),validationMiddleware(UUIDDto, APP_CONSTANTS.params),this.deleteDepartmentByID);
-    this.router.put(`${this.path}/:id`,validationMiddleware(CreateDepartmentDto, APP_CONSTANTS.body),authorize(['admin','HR']), this.updateDepartmentByID);
+
+    this.router.delete(
+    `${this.path}/:id`,
+     authorize(['admin','HR']),
+     validationMiddleware(UUIDDto, APP_CONSTANTS.params),
+     this.deleteDepartmentById
+     );
+
+    this.router.put(
+      `${this.path}/:id`,
+      validationMiddleware(CreateDepartmentDto, APP_CONSTANTS.body),
+      authorize(['admin','HR']),
+      this.updateDepartmentById
+      );
   }
 
   private createDepartment = async (
@@ -52,16 +71,17 @@ class DepartmentController extends AbstractController {
     }
   }
 
-  private getDepartmentbyId = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  private getDepartmentById = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
-      const data: any = await this.departmentService.getDepartmentbyID(request.params.id);
+      const data: any = await this.departmentService.getDepartmentById(request.params.id);
       response.status(200);
       response.send(this.fmt.formatResponse(data, Date.now() - request.startTime, "OK", 1));
     } catch (error) {
       return next(error);
     }
   }
-  private deleteDepartmentByID = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  
+  private deleteDepartmentById = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.departmentService.softDeleteDepartmentById(request.params.id);
       response.status(200);
@@ -70,7 +90,8 @@ class DepartmentController extends AbstractController {
       return next(error);
     }
   }
-  private updateDepartmentByID = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+
+  private updateDepartmentById = async (request: RequestWithUser, response: Response, next: NextFunction) => {
   try {
     const data: any = await this.departmentService.updateDepartmentDetails(request.params.id,request.body);
     response.status(200);

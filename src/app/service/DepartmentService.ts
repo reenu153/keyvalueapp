@@ -15,8 +15,8 @@ export class DepartmentService{
         return this.departmentRepo.getAllDepartments();
     }
 
-    public async getDepartmentbyID(id:string){
-        const department=await this.departmentRepo.getDepartmentbyId(id);
+    public async getDepartmentById(id:string){
+        const department=await this.departmentRepo.getDepartmentById(id);
         if(!department)
         {
             throw new EntityNotFoundException(ErrorCodes.DEPARTMENT_WITH_ID_NOT_FOUND);
@@ -38,10 +38,7 @@ export class DepartmentService{
     public async updateDepartmentDetails(departmentId: string, departmentDetails: any){
         const newDepartment = plainToClass(Department, {
             name: departmentDetails.name,
-            // username: employeeDetails.username,
-            // age: employeeDetails.age,
             departmentId: departmentDetails.departmentId,
-            // isActive: true,
         });
         const new_department= this.departmentRepo.updateDepartmentDetails(departmentId,departmentDetails);
         return new_department;
@@ -51,10 +48,7 @@ export class DepartmentService{
         try {
             const newDepartment = plainToClass(Department, {
                 name: departmentDetails.name,
-                // username: employeeDetails.username,
-                // age: employeeDetails.age,
                 departmentId: departmentDetails.departmentId,
-                // isActive: true,
             });
             const save = await this.departmentRepo.saveDepartmentDetails(newDepartment);
             return save;

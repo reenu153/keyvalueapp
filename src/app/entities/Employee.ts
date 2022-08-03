@@ -17,7 +17,7 @@ export class Employee extends AbstractEntity {
     public username: string;
     
     @Column({ nullable: false })
-    public joining_date: string;
+    public joiningDate: string;
 
     @Column({ nullable: false })
     public role: string;
@@ -36,6 +36,6 @@ export class Employee extends AbstractEntity {
     @JoinColumn()
     public department: Department; 
 
-    @Column({ nullable: false })
+    @Column({ nullable: false})
     public departmentId: string;
 }

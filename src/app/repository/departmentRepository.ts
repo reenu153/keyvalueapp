@@ -11,7 +11,7 @@ export class DepartmentRespository{
         const departmentRepo = getConnection().getRepository(Department);
         return departmentRepo.save(departmentDetails);
     }
-    async getDepartmentbyId(id:string){
+    async getDepartmentById(id:string){
         const departmentRepo = getConnection().getRepository(Department);
         return departmentRepo.findOne({id});
     }
